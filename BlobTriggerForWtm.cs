@@ -24,7 +24,7 @@ namespace Company.Function
         {
             using var blobStreamReader = new StreamReader(stream);
             var content = await blobStreamReader.ReadToEndAsync();
-            _logger.LogInformation($"C# Blob trigger function Processed blob add sendgrid\n Name: {name} \n Data: {content}");
+            _logger.LogInformation($"C# Blob trigger function Processed blob add sendgrid1\n Name: {name} \n Data: {content}");
      
         }        
 
