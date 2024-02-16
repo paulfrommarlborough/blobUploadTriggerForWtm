@@ -30,9 +30,15 @@ namespace Company.Function
 
         public static async Task SendEmailWithAttachmentAsync(Stream attachmentStream, string attachmentName)
         {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string sendGridApiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string senderEmail = Environment.GetEnvironmentVariable("SenderEmail");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string recipientEmail = Environment.GetEnvironmentVariable("RecipientEmail");
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             var client = new SendGridClient(sendGridApiKey);
             var message = new SendGridMessage();
