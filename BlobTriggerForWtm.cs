@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
@@ -26,36 +27,34 @@ namespace Company.Function
             _logger.LogInformation($"C# Blob trigger function Processed blob1\n Name: {name} \n Data: {content}");
      
         }        
-    
 
-    public static async Task SendEmailWithAttachmentAsync(Stream attachmentStream, string attachmentName)
-    {
-        string sendGridApiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
-        string senderEmail = Environment.GetEnvironmentVariable("SenderEmail");
-        string recipientEmail = Environment.GetEnvironmentVariable("RecipientEmail");
-
-        var client = new SendGridClient(sendGridApiKey);
-        var message = new SendGridMessage();
-        message.SetFrom(new EmailAddress(senderEmail));
-        message.AddTo(new EmailAddress(recipientEmail));
-        message.SetSubject("Blob Uploaded");
-        message.AddAttachment(attachmentName, Convert.ToBase64String(ReadFully(attachmentStream)), "application/octet-stream");
-
-        var response = await client.SendEmailAsync(message);
-        if (response.StatusCode != System.Net.HttpStatusCode.OK && response.StatusCode != System.Net.HttpStatusCode.Accepted)
+        public static async Task SendEmailWithAttachmentAsync(Stream attachmentStream, string attachmentName)
         {
-            throw new Exception($"Failed to send email. Status code: {response.StatusCode}");
-        }
-    }
+            string sendGridApiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
+            string senderEmail = Environment.GetEnvironmentVariable("SenderEmail");
+            string recipientEmail = Environment.GetEnvironmentVariable("RecipientEmail");
 
-    private static byte[] ReadFully(Stream input)
-    {
-        using (MemoryStream ms = new MemoryStream())
+            var client = new SendGridClient(sendGridApiKey);
+            var message = new SendGridMessage();
+            message.SetFrom(new EmailAddress(senderEmail));
+            message.AddTo(new EmailAddress(recipientEmail));
+            message.SetSubject("Blob Uploaded");
+            message.AddAttachment(attachmentName, Convert.ToBase64String(ReadFully(attachmentStream)), "application/octet-stream");
+
+            var response = await client.SendEmailAsync(message);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK && response.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                throw new Exception($"Failed to send email. Status code: {response.StatusCode}");
+            }
+        }
+
+        public static byte[] ReadFully(Stream input)
         {
-            input.CopyTo(ms);
-            return ms.ToArray();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
         }
-    }
-
     }
 }
