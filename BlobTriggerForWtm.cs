@@ -25,7 +25,8 @@ namespace Company.Function
             using var blobStreamReader = new StreamReader(stream);
             var content = await blobStreamReader.ReadToEndAsync();
             _logger.LogInformation($"C# Blob trigger function Processed blob add sendgrid1\n Name: {name} \n Data: {content}");
-     
+
+             await SendEmailWithAttachmentAsync(stream, name);
         }        
 
         public static async Task SendEmailWithAttachmentAsync(Stream attachmentStream, string attachmentName)
